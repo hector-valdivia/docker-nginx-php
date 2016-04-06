@@ -17,7 +17,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y git vim curl wget build-
 RUN add-apt-repository -y ppa:ondrej/php5
 RUN add-apt-repository -y ppa:nginx/stable
 RUN apt-get update
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y --force-yes php5-cli php5-fpm php5-mysql php5-pgsql php5-sqlite php5-curl\
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y --force-yes php5-fpm php5-mysql php5-pgsql php5-sqlite php5-curl\
 		       php5-gd php5-mcrypt php5-intl php5-imap php5-tidy php5-dev
 		       
 RUN DEBIAN_FRONTEND="noninteractive" pecl install mongodb
@@ -32,12 +32,12 @@ RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php5/fpm/php-fpm.co
 RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php5/fpm/php.ini
 
 # Enable MongoDB PHP
-RUN echo "extension=mongodb.so" > /etc/php5/cli/conf.d/20-mongodb.ini
+RUN echo "extension=mongodb.so" > /etc/php5/fpm/conf.d/20-mongodb.ini
 RUN php5enmod mcrypt mongodb
 
 # Install phalcon
 RUN cd /tmp; git clone https://github.com/phalcon/cphalcon -b master --single-branch; cd ~/cphalcon/build; ./install; rm -rf ~/cphalcon
-RUN echo "extension=phalcon.so" > /etc/php5/cli/conf.d/30-phalcon.ini
+RUN echo "extension=phalcon.so" > /etc/php5/fpm/conf.d/30-phalcon.ini
 
 RUN mkdir -p        /var/www
 ADD build/default   /etc/nginx/sites-available/default
