@@ -36,10 +36,9 @@ RUN echo "extension=mongodb.so" > /etc/php5/mods-available/mongodb.ini
 RUN php5enmod mcrypt mongodb
 
 # Install phalcon
-RUN git clone --depth=1 git://github.com/phalcon/cphalcon.git
-RUN cd cphalcon/build && ./install 64bits
+RUN cd /tmp; git clone https://github.com/phalcon/cphalcon -b master --single-branch; cd ~/cphalcon/build; ./install; rm -rf ~/cphalcon
 RUN echo "extension=phalcon.so" > /etc/php5/fpm/conf.d/30-phalcon.ini
- 
+
 RUN mkdir -p        /var/www
 ADD build/default   /etc/nginx/sites-available/default
 RUN mkdir           /etc/service/nginx
